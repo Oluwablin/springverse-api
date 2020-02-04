@@ -2,20 +2,25 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\LoanRepaymentTransactionService;
+use App\Services\TransactionService;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
-class ProcessLoanRepaymentTransaction
+class ProcessTransaction
 {
     /**
-     * @var LoanRepaymentTransactionService
+     * @var TransactionService
      */
-    private $loanRepaymentTransactionService;
+    private $transactionService;
 
-    public function __construct(LoanRepaymentTransactionService $loanRepaymentTransactionService)
+    /**
+     * ProcessTransaction constructor.
+     *
+     * @param TransactionService $transactionService
+     */
+    public function __construct(TransactionService $transactionService)
     {
-        $this->loanRepaymentTransactionService = $loanRepaymentTransactionService;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -29,9 +34,8 @@ class ProcessLoanRepaymentTransaction
      */
     public function __invoke($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        return $this->loanRepaymentTransactionService->processLoanRepaymentTransaction(
+        return $this->transactionService->processTransaction(
             $args['user'],
-            $args['loan_id'],
             $args['transaction_id'],
             $args['action'],
             $args['message']

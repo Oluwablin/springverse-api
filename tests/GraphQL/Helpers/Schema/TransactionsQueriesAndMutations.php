@@ -22,33 +22,6 @@ class TransactionsQueriesAndMutations
         ';
     }
 
-    /**
-     * Mutation for processing (approving/disapproving) a loan repayment transaction.
-     *
-     * @return string
-     */
-    public static function processLoanRepaymentTransaction()
-    {
-        return '
-            mutation ProcessLoanRepaymentTransaction(
-                $transaction_id: ID!
-                $loan_id: ID!
-                $action: TransactionProcessingType!
-                $message: String
-            ) {
-                ProcessLoanRepaymentTransaction(
-                    transaction_id: $transaction_id
-                    loan_id: $loan_id
-                    action: $action
-                    message: $message
-                ) {
-                    id
-                    transaction_amount
-                    transaction_status
-                }
-            }
-        ';
-    }
 
     /**
      * Query for getting a transaction by ID.
@@ -60,6 +33,70 @@ class TransactionsQueriesAndMutations
             query GetTransactionById($id: ID!) {
                 GetTransactionById(id: $id) {
                     id
+                }
+            }
+        ';
+    }
+
+    /**
+     * Mutation for initiating a contribution plan transaction.
+     *
+     * @return string
+     */
+    public static function initiateContributionPlanTransaction()
+    {
+        return '
+            mutation InitiateContributionPlanTransaction($input: CreateContributionPlanTransactionInput!) {
+                InitiateContributionPlanTransaction(input: $input) {
+                     id
+                     transaction_amount
+                }
+            }
+        ';
+    }
+
+    /**
+     * Mutation for processing (approving/disapproving) a transaction.
+     *
+     * @return string
+     */
+    public static function processTransaction()
+    {
+        return '
+            mutation ProcessTransaction(
+                $transaction_id: ID!
+                $action: TransactionProcessingType!
+                $message: String
+            ) {
+                ProcessTransaction(
+                    transaction_id: $transaction_id
+                    action: $action
+                    message: $message
+                ) {
+                    id
+                    transaction_date
+                    transaction_type
+                    transaction_amount
+                    transaction_medium
+                    transaction_purpose
+                    transaction_status
+                }
+            }
+        ';
+    }
+
+    /**
+     * Mutation for initiating a transaction request.
+     *
+     * @return string
+     */
+    public static function initiateTransaction()
+    {
+        return '
+            mutation InitiateTransaction($input: CreateTransactionInput!) {
+                InitiateTransaction(input: $input) {
+                     id
+                     transaction_amount
                 }
             }
         ';

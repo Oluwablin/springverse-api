@@ -2,25 +2,25 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Services\UserService;
+use App\Services\BranchService;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
-class GetCustomerTransactionsById
+class SearchBranchCustomers
 {
     /**
-     * @var UserService
+     * @var BranchService
      */
-    private $userService;
+    private $branchService;
 
     /**
-     * GetCustomerTransactionsById constructor.
+     * GetBranchLoans constructor.
      *
-     * @param UserService $userService
+     * @param BranchService $branchService
      */
-    public function __construct(UserService $userService)
+    public function __construct(BranchService $branchService)
     {
-        $this->userService = $userService;
+        $this->branchService = $branchService;
     }
 
     /**
@@ -34,6 +34,10 @@ class GetCustomerTransactionsById
      */
     public function __invoke($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        return $this->userService->getCustomerTransactionsQuery($args['customer_id'], $args['transaction_type']);
+        $searchString = isset($args['search_query']) ? $args['search_query'] : null;
+        $startDate = isset($args['start_date']) ? $args['start_date'] : null;
+        $endDate = isset($args['end_date']) ? $args['end_date'] : null;
+
+        return $this->branchService->searchBranchCustomersQuery($args['branch_id'], $searchString, $startDate, $endDate);
     }
 }
